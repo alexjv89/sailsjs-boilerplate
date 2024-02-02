@@ -24,9 +24,28 @@
 // Ensure we're in the project directory, so cwd-relative paths work as expected
 // no matter where we actually lift from.
 // > Note: This is not required in order to lift, but it is a convenient default.
+require('dotenv').config();
+
 process.chdir(__dirname);
 
 
+
+sentry = require('@sentry/node');
+
+sentry.init({
+  dsn: process.env.SENTRY_DNS,
+  environment: process.env.NODE_ENV
+});
+
+class CustomError extends Error {
+  constructor(message,status) {
+    super(message);
+    this.status=status || 500;
+    this.is_custom_error = true;
+  }
+}
+
+global.CustomError = CustomError;
 
 // Attempt to import `sails` dependency, as well as `rc` (for loading `.sailsrc` files).
 var sails;
