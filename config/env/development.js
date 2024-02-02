@@ -1,5 +1,5 @@
 /**
- * Production environment settings
+ * Development environment settings
  *
  * This file can include shared settings for a production environment,
  * such as API keys or remote database passwords.  If you're using
@@ -12,10 +12,13 @@
 
 
 var sentry = require('@sentry/node');
-sentry.init({
-  dsn: process.env.SENTRY_DNS,
-  environment: process.env.NODE_ENV
-});
+
+if(process.env.SENTRY_DNS){
+  sentry.init({
+    dsn: process.env.SENTRY_DNS,
+    environment: process.env.NODE_ENV
+  });
+}
 
 module.exports = {
 
@@ -26,10 +29,13 @@ module.exports = {
   models: {
     datastore: 'default',
     migrate: 'safe'
+    // migrate: 'drop'
   },
   test_points:{
     send_email_to_self:{
-      flag:false,
+      flag:true,
+      to:'alexjv89@gmail.com',
+      cc:'alexjv89@gmail.com',
     }
   },
 
@@ -43,18 +49,13 @@ module.exports = {
       ssl:  { rejectUnauthorized: false } // ssl enabled but will not throw error for self signed certificates. 
     }
   },
+  
   bull: {
     redis: {
       host: process.env.REDIS_BULL_HOST,
       port: process.env.REDIS_BULL_PORT,
       db: process.env.REDIS_BULL_DB,
     }
-  },
-  session: {
-    adapter: 'connect-redis',
-    host: process.env.REDIS_SESSION_HOST,
-    port: 6379,
-    db: process.env.REDIS_SESSION_DB,
   },
   // slack_webhook: process.env.SLACK_WEBHOOK,
   mailgun: {
@@ -81,13 +82,9 @@ module.exports = {
     // kms_key_id: process.env.AWS_KMS_KEY_ID
   },
 
-  sockets: {
-    onlyAllowOrigins: ["https://app.mralbert.in"]
-  },
-
   // api_token_secret: process.env.API_TOKEN_SECRET,
 
-  
+ 
 
   // uploads: {
   //   adapter: require('skipper-s3'),
@@ -106,9 +103,18 @@ module.exports = {
     'shubhra@cashflowy.io',
     'fahim+testAdmin@cashflowy.io'
   ],
+
   sentry: sentry,
+  
+  // session: {
+  //   adapter: 'connect-redis',
+  //   host: process.env.REDIS_SESSION_HOST,
+  //   port: 6379,
+  //   db: process.env.REDIS_SESSION_DB,
+  // },
   uploads:{
     adapter:require('skipper-disk'),
   },
- 
-};
+  
+}
+

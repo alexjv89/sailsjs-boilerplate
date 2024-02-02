@@ -1,5 +1,5 @@
 /**
- * Production environment settings
+ * Test environment settings
  *
  * This file can include shared settings for a production environment,
  * such as API keys or remote database passwords.  If you're using
@@ -10,12 +10,11 @@
  *
  */
 
-
-var sentry = require('@sentry/node');
-sentry.init({
-  dsn: process.env.SENTRY_DNS,
-  environment: process.env.NODE_ENV
-});
+// var sentry = require('@sentry/node');
+// sentry.init({
+//   dsn: process.env.SENTRY_DNS,
+//   environment: process.env.NODE_ENV
+// });
 
 module.exports = {
 
@@ -27,11 +26,6 @@ module.exports = {
     datastore: 'default',
     migrate: 'safe'
   },
-  test_points:{
-    send_email_to_self:{
-      flag:false,
-    }
-  },
 
   datastores: {
     default: {
@@ -40,14 +34,14 @@ module.exports = {
       user: process.env.DB_USER, // optional
       password: process.env.DB_PASSWORD, // optional
       database: process.env.DB_DATABASE, //optional
-      ssl:  { rejectUnauthorized: false } // ssl enabled but will not throw error for self signed certificates. 
+      ssl: true
     }
   },
   bull: {
     redis: {
       host: process.env.REDIS_BULL_HOST,
-      port: process.env.REDIS_BULL_PORT,
-      db: process.env.REDIS_BULL_DB,
+      port: 6379,
+      db: 1,
     }
   },
   session: {
@@ -61,11 +55,11 @@ module.exports = {
     api_key: process.env.MAILGUN_APIKEY,
     domain: process.env.MAILGUN_DOMAIN,
   },
-  metabase:{
-    site_url:process.env.METABASE_SITE_URL,
-    secret_key:process.env.METABASE_SECRET_KEY,
-  },
   // background_secret: process.env.BACKGROUND_SECRET,
+  // metabase: {
+  //   site_url: process.env.METABASE_SITE_URL,
+  //   secret_key: process.env.METABASE_SECRET_KEY
+  // },
 
   password_reset_secret: process.env.PASSWORD_RESET_SECRET,
 
@@ -87,7 +81,21 @@ module.exports = {
 
   // api_token_secret: process.env.API_TOKEN_SECRET,
 
-  
+  // firebase: {
+  //       serviceAccount: {
+  //           type: "service_account",
+  //           project_id: process.env.FIREBASE_PROJECT_ID,
+  //           private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+  //           private_key: process.env.FIREBASE_PRIVATE_KEY.split('\\n').concat().join("\n"),
+  //           client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  //           client_id: process.env.FIREBASE_CLIENT_ID,
+  //           auth_uri: "https://accounts.google.com/o/oauth2/auth",
+  //           token_uri: "https://accounts.google.com/o/oauth2/token",
+  //           auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+  //           client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL
+  //       },
+  //       databaseUrl: process.env.FIREBASE_DATABASE_URL
+  // },
 
   // uploads: {
   //   adapter: require('skipper-s3'),
@@ -98,17 +106,11 @@ module.exports = {
   // },
 
   // admins: process.env.ADMINS.split(',').map(function(s){return parseInt(s)}),
-  admins: [
-    'alexjv89@gmail.com',
-    'finahas@gmail.com',
-    'finahas@mralbert.in',
-    'fahim@cashflowy.io',
-    'shubhra@cashflowy.io',
-    'fahim+testAdmin@cashflowy.io'
-  ],
-  sentry: sentry,
-  uploads:{
-    adapter:require('skipper-disk'),
-  },
- 
+
+  // sentry: sentry
+  razorpay: {
+    webhook_secret: process.env.RAZORPAY_WEBHOOK_SECRET,
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+  }
 };

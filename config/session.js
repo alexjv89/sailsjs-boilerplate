@@ -18,8 +18,16 @@ module.exports.session = {
   * of your users, forcing them to log in again.                             *
   *                                                                          *
   ***************************************************************************/
-  secret: '4096ca282de04ee23994aff75956f9be',
+  secret: process.env.SAILS_SESSION_SECRET,
 
+  // this configuration was added because with new versions of sails, sails disables
+  // session on urls that looks like assets. 
+  // the problem is passport fails when req.session object is missing
+  // ref : https://sailsjs.com/documentation/concepts/sessions#?disabling-sessions-for-certain-requests
+  // ref : https://sailsjs.com/documentation/reference/configuration/sails-config-session#?properties 
+  isSessionDisabled:function(){
+    return false;
+  },
 
   /***************************************************************************
   *                                                                          *

@@ -9,7 +9,18 @@
  * https://sailsjs.com/config/bootstrap
  */
 
-module.exports.bootstrap = async function() {
+module.exports.bootstrap = function(cb) {
+
+  async.eachSeries(_.values(require('include-all')({
+    dirname: __dirname + '/../bootstraps',
+    filter : /(.+Bootstrap)\.js$/,
+    excludeDirs : /^\.(git|svn)$/,
+    optional: true
+  })), function (bootmodule, callback) {
+    _.isFunction(bootmodule) && 
+      (bootmodule(callback), true) || callback();
+  }, 
+  cb); // bootstrap callback
 
   // By convention, this is a good place to set up fake data during development.
   //

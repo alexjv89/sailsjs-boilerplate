@@ -36,6 +36,22 @@ module.exports.views = {
   *                                                                          *
   ***************************************************************************/
 
-  layout: 'layouts/layout'
+  layout: 'layout',
+  locals:{
+    fn2:function(number){
+      // var a=GeneralService.sails_helper.formatNumber(number,'indian','decimal1')
+      // a=a.split('.')[0];
+      // // return a;
+      // return number;
+      // if(a=GeneralService.sails_helper.formatNumber(number,'indian','decimal1')){
+      if(number==0)
+        return '0';
+      if(a=GeneralService.india.number.toString(number,'rupee')){
+        return a+'test';
+      }
+      else 
+        return 'test';
+    },
+  }
 
 };

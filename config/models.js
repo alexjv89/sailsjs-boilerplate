@@ -69,8 +69,8 @@ module.exports.models = {
   ***************************************************************************/
 
   attributes: {
-    createdAt: { type: 'number', autoCreatedAt: true, },
-    updatedAt: { type: 'number', autoUpdatedAt: true, },
+    createdAt: { type: 'ref', columnType: 'timestamptz', autoCreatedAt: true, },
+    updatedAt: { type: 'ref', columnType: 'timestamptz', autoUpdatedAt: true, },
     id: { type: 'number', autoIncrement: true, },
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?
@@ -101,7 +101,7 @@ module.exports.models = {
   ******************************************************************************/
 
   dataEncryptionKeys: {
-    default: 'sWAuxtRSpJAN4Qr9a76UjsLkvw1zhAsy9WqbXzawZuc='
+    default: 'ht48L/QVOKIwx3xedcY4Xb85BzA7Y9jp1HN5sEgG7W8='
   },
 
 
