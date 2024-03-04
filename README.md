@@ -30,3 +30,6 @@ this starter project comes with
 
 
 Dont like this configuration, feel free to tweet it and save it as your preferred configurations while building micro services. 
+
+## Things to change 
+- update the logo and favicon
