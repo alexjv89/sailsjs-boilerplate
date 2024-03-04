@@ -138,29 +138,35 @@ module.exports={
 	},
 	createMembership:function(req,res){
 		async.auto({
-			createMembership:async function(){
+			// find user
+			// if not create user
+			// create membership
+
+			findUser:async function(){
+				var rnd = (len, chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') => [...Array(len)].map(() => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+				var bcrypt = require('bcryptjs');
+				const salt = bcrypt.genSaltSync(10);
+				var hashed_password = bcrypt.hashSync(rnd(12), salt); // randomly generated password.
+				var create = {
+					name:req.body.name||req.body.email.split('@')[0],
+					email:req.body.email,
+					is_verified:false,
+					password:hashed_password,
+				}
+				var user = await User.findOne({email:req.body.email});
+				if(!user){
+					user = await User.create(create).fetch();
+					user.created_now=true;
+				}
+				return user;
+			},
+			createMembership:['findUser',async function(results){
 				var member={
 					type:req.body.type,
-					user:req.body.user_id,
+					user:results.findUser.id,
 					org:req.org.id,
 				}
 				return await Member.create(member).fetch();
-				
-			},
-			// sendEmail:async function(){
-			// 	var data={
-			// 		title:'Send Email - Add user to org',
-			// 		options:{
-			// 			template:'add_user_to_org',
-			// 			org:req.org.id,
-			// 			user:req.body.user_id,
-			// 		},
-			// 	};
-			// 	await queue.add('send_transactional_email',data);
-			// }
-			findUser:['createMembership',async function(results){
-				var user = await User.findOne({ where: {id: results.createMembership.user }, })
-				return user
 			}],
 			findOrg:['createMembership',async function(results){
 				var org = await Org.findOne({ where: {id: results.createMembership.org }, })
@@ -172,8 +178,9 @@ module.exports={
 					template:'add_user_to_org',
 					to:results.findUser.email,
 					from:'Cashflowy<no-reply@cashflowy.io>',
-					subject: 'Add user to org',
+					subject: `${req.user.name} invited you to join ${req.org.name} on Cashflowy.io`,
 					locals:{
+						req_user:req.user,
 						user: results.findUser,
 						org:results.findOrg,
 						url:url
